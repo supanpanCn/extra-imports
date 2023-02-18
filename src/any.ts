@@ -13,31 +13,34 @@ export default (code:string,start:string,end:string):Ires|undefined=>{
   let current = 0
   let s = 0
   let e = Infinity
+  let i = 0
+  const len = code.length
   function _reset(){
     current = 0
     stack = []
   }
-  let i = 0
-  for(i;i<code.length;i++){
-    const v = code[i]
-    if(v === start[current]){
-      stack.push(v)
-      current++
+
+  function _while(tar:string){
+    for(i;i<len;i++){
+      const v = code[i]
+      if(v === tar[current]){
+        stack.push(v)
+        current++
+      }else{
+        _reset()
+      }
+      if(stack.join('') === tar) break
     }
-    if(stack.join('') === start) break
-    _reset()
   }
-  s = i
-  for(i;i<code.length;i++){
-    const v = code[i]
-    if(v === end[current]){
-      stack.push(v)
-      current++
-    }
-    if(stack.join('') === start) break
-    _reset()
-  }
-  e = i
+
+  _while(start)
+  
+  _reset()
+  s = i - start.length + 1
+
+  _while(end)
+
+  e = i + 1
   return {
     start:s,
     end:e,
