@@ -1,0 +1,15 @@
+
+/dist
+
+node_modules
+
+.idea
+
+.vscode
+
+router.config.js
+
+vue-router.js
+
+.pnpm-lock.yaml
+
