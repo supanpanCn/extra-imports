@@ -39,7 +39,6 @@
 	},
 	"dependencies": {
 		"displace-comments": "^1.0.0",
-		"mlly": "^1.1.1",
-		"pathe": "^1.1.0"
+		"mlly": "^1.1.1"
 	}
 }
