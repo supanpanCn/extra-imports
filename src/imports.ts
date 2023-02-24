@@ -1,4 +1,4 @@
-import { doRegex,regex } from 'su-utils'
+import { doRegex,regex } from 'su-helpers'
 interface Irespose{
   text:string;
   start:number;
