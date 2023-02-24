@@ -1,99 +1,175 @@
-import stripComments from 'displace-comments'
+import { runArr, extractBlockCode, Mixin } from "su-utils";
+import { findExports } from "mlly";
+import type { ESMExport } from "mlly";
 
-type Data = {
-  key?:string;
-  value?:string;
-  start?:number;
-  end?:number;
+type Export = Mixin<
+  ESMExport,
+  {
+    declaration?: string;
+  }
+>;
+
+export interface Irespose {
+  text: string;
+  start: number;
+  end: number;
+  key?: string;
+  value?: string;
 }
 
-export interface Irespose{
-  type:'function'|'variable'|'object';
-  text:string;
-  start:number;
-  end:number;
-  data:Data | Data[] | null;
+function extractFuncBody(initialIndex:number,endIndex:number,code:string){
+  const { end } =
+    extractBlockCode({
+      code,
+      start: "(",
+      end: ")",
+      initialIndex,
+    }) || {};
+  if (end) {
+    const { end: finalEnd } =
+      extractBlockCode({
+        code,
+        start: "{",
+        end: "}",
+        initialIndex: end,
+      }) || {};
+    if (finalEnd) {
+      return code.substring(endIndex, finalEnd + 1);
+    }
+  }
+  return ''
 }
 
-function getData(this:Irespose,m:string[]){
-  const {
-    type,
-    start,
-    text
-  } = this
-  let item:any = {}
-  switch(type){
-    case 'function':{
-      const key = m[6].trim()
-      item.key = key.substring(0,key.length-1)
-      item.value = m[5]+'()'+m[7]
-      const s = text.indexOf(m[2])
-      item.start = start + s
-      item.end = start+s+m[2].length
-      break
+function execBrace(this: Irespose,code:string,initialIndex:number,getLen:(text:string)=>number){
+  const { text = "" } =
+    extractBlockCode({
+      code,
+      start: "{",
+      end: "}",
+      initialIndex: initialIndex,
+    }) || {};
+  this.value = text.trim();
+  this.end += getLen(text)
+  execRewriteText.call(this,code)
+}
+
+function execRewriteText(this: Irespose,code:string){
+  this.text = code.substring(this.start,this.end)
+}
+
+function execArrowFunction(this: Irespose,endIndex:number,code:string,getLen:(text:string)=>number){
+  const value = extractFuncBody(this.end,endIndex,code)
+  this.value = value.trim()
+  this.end += getLen(value)
+  execRewriteText.call(this,code)
+}
+
+function execFunction(this: Irespose,endIndex:number,code:string,getLen:(text:string)=>number){
+  const value = extractFuncBody(this.end,endIndex,code);
+  this.value = value.trim()
+  this.end += getLen(value)
+  execRewriteText.call(this,code)
+}
+
+
+function complement(this: Irespose, code: string, exp: Export) {
+
+  const _execArrowFunction = execArrowFunction.bind(this)
+  const _execFunction = execFunction.bind(this)
+  const _rewriteText = execRewriteText.bind(this)
+  const _execBrace = execBrace.bind(this)
+
+  if (exp.type === "default") {
+    _execBrace(code,this.end,(text)=>text.length)
+    _rewriteText(code)
+    return;
+  }
+  
+
+  if (exp.declaration === "function") {
+    const value = extractFuncBody(this.end,this.end,code)
+    this.value = value.trim()
+    this.end += value.length
+    _rewriteText(code)
+    return;
+  }
+
+  if (exp.declaration && /let|var|const/g.test(exp.declaration)) {
+    let i = code.indexOf("\n", this.end);
+    const lineText = code.substring(this.end, i);
+    if (!lineText.includes("=")) {
+      this.value = undefined;
+      _rewriteText(code)
+      return;
     }
-    case 'variable':{
-      const key = m[6].trim()
-      item.key = key
-      item.value = m[8]
-      const s = text.indexOf(key)
-      item.start = start+s
-      item.end = start + s + m[2].length
-      break
+
+    const eqPos = lineText.indexOf('=')
+    const leftCon = lineText.substring(0,eqPos)
+    const rightCon = lineText.substring(eqPos+1)
+    const trimedRightCon = rightCon.trim()
+    const misLen = leftCon.length - leftCon.trim().length + 1
+    if (trimedRightCon[trimedRightCon.length - 1] === ";") {
+      this.value = trimedRightCon.substring(0,trimedRightCon.length-1).trim();
+      this.end += misLen + rightCon.length
+      _rewriteText(code)
+      return;
     }
-    case 'object':{
-      item = []
-      const reg = /\{([^\}]*)\}/g
-      const m = reg.exec(text)
-      if(m){
-        const it:Data = {}
-        const strs = m[1].split(',')
-        strs.forEach(v=>{
-          const s = text.indexOf(v)
-          item.start = start + s
-          item.end = start + s + v.length
-          v = v.replaceAll('\n','')
-          let val = v
-          if(v.indexOf(':')>-1){
-            val = v.split(':')[1]
-          }
-          it.key = v
-          it.value = val
-          item.push(it)
-        })
+
+    if(trimedRightCon){
+
+      if(trimedRightCon[0] === '{'){
+        _execBrace(code,this.end + misLen + rightCon.indexOf('{'),(text)=>misLen + rightCon.length + text!.length - 1)
+        return
       }
-      break
+      
+      if((trimedRightCon[0] === '(' && trimedRightCon.includes('=>'))){
+        _execArrowFunction(this.end+misLen,code,(value)=>misLen + value.length)
+        return
+      }
+
+      if(trimedRightCon.startsWith('function')){
+        _execFunction(this.end+misLen,code,(value)=>misLen + value.length)
+        return
+      }
+      
+    }
+    const reg = /(?<=[^;\n]*?)(\{|function|\()/g
+    reg.lastIndex = this.end + misLen
+    const m = reg.exec(code)
+    if(m){
+      const getLen = (text:string)=> misLen + m.index - this.end + text!.length - 1
+      if(m[1]==='{'){
+        _execBrace(code,m.index,getLen)
+        return
+      }
+
+      if(m[1] === '('){
+        _execArrowFunction(m.index,code,getLen)
+        return
+      }
+
+      if(m[1] === 'function'){
+        _execFunction(m.index,code,getLen)
+        return
+      }
     }
   }
-  return item as Irespose['data']
 }
 
-function getType(isVar:string|undefined){
-  if(isVar){
-    if(isVar.includes('function')){
-      return 'function'
-    }
-    return 'variable'
-  }
-  return 'object'
-}
 
-export default (code:string)=>{
-  code = stripComments(code)
-  const reg = /export([\s])+((default\1+)?(\{[^\}]*?\})|(function|var|let|const)\1+(.*)?(\=(.*)?|\{[^\}]*?\}))/g
-  let m = reg.exec(code)
-  const res:Irespose[] = []
-  while(m){
-    const o:Irespose = {
-      type:getType(m[5]),
-      text:m[0],
-      start:m.index,
-      end:reg.lastIndex,
-      data:null
-    }
-    o.data = getData.call(o,m)
-    res.push(o)
-    m = reg.exec(code)
-  }
-  return res
-}
+export default (code: string) => {
+  const exports: Irespose[] = [];
+  const parsedExports = findExports(code);
+  runArr<Export>(parsedExports, (v) => {
+    const o = {
+      text: v.code,
+      start: v.start,
+      end: v.end,
+      key: v.name,
+      value: "",
+    };
+    complement.call(o, code, v);
+    exports.push(o);
+  });
+  return exports;
+};

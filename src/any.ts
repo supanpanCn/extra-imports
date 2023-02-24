@@ -4,16 +4,17 @@ interface Ires{
   start:number;
   end:number;
   text:string;
+  initialIndex?:number;
 }
 
-export default (code:string,start:string,end:string):Ires|undefined=>{
+export default (code:string,start:string,end:string,initialIndex?:number):Ires|undefined=>{
   code = stripComments(code)
   if(!(start && end && code)) return
   let stack:string[] = []
   let current = 0
   let s = 0
   let e = Infinity
-  let i = 0
+  let i = initialIndex || 0
   const len = code.length
   function _reset(){
     current = 0

@@ -13,3 +13,4 @@ vue-router.js
 
 .pnpm-lock.yaml
 
+/.npm-only-allow

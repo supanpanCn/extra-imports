@@ -1,5 +1,4 @@
-import stripComments from 'displace-comments'
-
+import { doRegex,regex } from 'su-utils'
 interface Irespose{
   text:string;
   start:number;
@@ -32,11 +31,9 @@ function getAbsolutePos(this:Irespose,key:keyof Pick<Irespose,'from'|'import'> )
 }
 
 export default (code:string)=>{
-  code = stripComments(code)
-  const reg = /import([\s])+((\{([^}]*)?\}|.*?)\1from\1+)?('|")(.*)?\5;?/g
-  let m = reg.exec(code)
+  const reg = regex.importRE
   const res:Irespose[] = []
-  while(m){
+  doRegex(reg,code,(m)=>{
     const imp = m[4] ? m[4] : m[3]
     const o:Irespose = {
       text:m[0],
@@ -54,7 +51,6 @@ export default (code:string)=>{
     }
     o.extra.from = getAbsolutePos.call(o,'from')
     res.push(o)
-    m = reg.exec(code)
-  }
+  })
   return res
 }
