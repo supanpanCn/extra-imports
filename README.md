@@ -200,6 +200,48 @@
     ]
    */
   ```
+* parseComments(code)  
+  ```js
+  import {parseAny} from 'extract-modules'
+  parseComments(`
+  /**
+   * @name {sp} 姓名
+   * @age {27} 年龄
+  */
+  // 解析
+  `) 
+  /** output
+   [
+    {
+      end:47,
+      start:41,
+      text:'// 解析\n',
+      type:'single',
+    },
+    {
+      end:40,
+      lines:[{
+        end:21
+        key:'name'
+        remark:'姓名'
+        start:5
+        text:' * @name {sp} 姓名'
+        value:'sp'
+      },{
+        end:37
+        key:'age'
+        remark:'姓名'
+        start:22
+        text:' * @age {27} 年龄'
+        value:'27'
+      }],
+      start:1,
+      text:`\/\*\*\n * @name {sp} 姓名\n * @age {27} 年龄\n\*\/`,
+      type:'multiple',
+    }
+   ]
+   */
+  ```
 
 * parseAny(code,start,end)  
   ```js
