@@ -20,7 +20,8 @@
 		"parse-imports",
 		"parse-exports",
 		"parse-const",
-		"parse-function"
+		"parse-function",
+		"parse-comments"
 	],
 	"repository": {
 		"type": "git",
