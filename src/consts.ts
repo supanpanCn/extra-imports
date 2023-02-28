@@ -6,8 +6,7 @@ interface Irespose {
   key: string;
   value: string | undefined;
 }
-let step = 0;
-function createItem(text: string) {
+function createItem(text: string,step:number) {
   function _getKey(key:string){
     const reg = /let|var|const/g
     const m = reg.exec(key)
@@ -44,14 +43,10 @@ function createItem(text: string) {
 
 export default (code: string) => {
   const res: Irespose[] = [];
-  step = 0;
   parseCode(code, {
     visitor(text, s, astType) {
       if (["const", "var", "let"].includes(astType)) {
-        if (step === 0) {
-          step = s;
-        }
-        const item = createItem(text);
+        const item = createItem(text,s);
         item && res.push(item);
       }
     },

@@ -7,8 +7,7 @@ interface Irespose {
 
 const filters = ["const", "var", "let","function"]
 
-let step = 0;
-function createItem(text: string,astType:string) {
+function createItem(text: string,astType:string,step:number) {
   let body = text.trim()
   const f = filters.slice(0,filters.length-1)
   if(f.includes(astType)){
@@ -30,14 +29,10 @@ function createItem(text: string,astType:string) {
 
 export default (code: string) => {
   const res: Irespose[] = [];
-  step = 0;
   parseCode(code, {
     visitor(text, s, astType) {
       if (filters.includes(astType)) {
-        if (step === 0) {
-          step = s;
-        }
-        const item = createItem(text,astType);
+        const item = createItem(text,astType,s);
         if(item) res.push(item);
       }
     },
