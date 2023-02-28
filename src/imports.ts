@@ -34,7 +34,7 @@ export default (code:string)=>{
   const reg = regex.importRE
   const res:Irespose[] = []
   doRegex(reg,code,(m)=>{
-    const imp = m[4] ? m[4] : m[3]
+    const imp = m[4] ? m[4].trim() : m[3].trim()
     const o:Irespose = {
       text:m[0],
       start:m.index,
