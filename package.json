@@ -1,6 +1,6 @@
 {
 	"name": "extract-modules",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "Parses the string to get its body and location information",
 	"packageManager": "pnpm@7.1.7",
 	"main": "./dist/index.js",
