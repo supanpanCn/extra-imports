@@ -4,14 +4,14 @@ specifiers:
   '@types/node': ^18.11.18
   displace-comments: ^1.0.0
   mlly: ^1.1.1
-  su-helpers: 0.0.9
+  su-helpers: 0.0.10
   tsup: ^6.5.0
   typescript: ^4.9.5
 
 dependencies:
   displace-comments: 1.0.0
   mlly: 1.1.1
-  su-helpers: 0.0.9
+  su-helpers: 0.0.10
 
 devDependencies:
   '@types/node': 18.14.0
@@ -935,8 +935,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /su-helpers/0.0.9:
-    resolution: {integrity: sha512-Rsuo0N4Z+TueAQv7Ywy90HCxzaMtpgf/pvopQMk1qHNbZfHoUHKRRM0dpM3PDh/ww3Q+SGcHef27srQs2XqjYA==}
+  /su-helpers/0.0.10:
+    resolution: {integrity: sha512-37/z8nSunKIqxQKArVRf4x3vRjNNbJH9q+iFmw4mqigtyuI5+sjMigXP/edYeUmfnjlSmvQlGLAdxcKg9J+hkQ==}
     requiresBuild: true
     dependencies:
       displace-comments: 1.0.0
