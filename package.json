@@ -1,6 +1,6 @@
 {
 	"name": "extract-modules",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"description": "Parses the string to get its body and location information",
 	"packageManager": "pnpm@7.1.7",
 	"main": "./dist/index.js",
@@ -41,6 +41,6 @@
 	"dependencies": {
 		"displace-comments": "^1.0.0",
 		"mlly": "^1.1.1",
-		"su-helpers": "0.0.6"
+		"su-helpers": "0.0.7"
 	}
 }
