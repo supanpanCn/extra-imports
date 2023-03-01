@@ -1,5 +1,5 @@
 import { parseCode,replaceAll } from "su-helpers";
-interface Irespose {
+export interface IvariableResult {
   text: string;
   start: number;
   end: number;
@@ -30,7 +30,7 @@ function createItem(text: string,step:number) {
     key =  _getKey(text)
     value = undefined
   }
-  const o: Irespose = {
+  const o: IvariableResult = {
     text:text.trim(),
     start: step,
     end: step + text.length,
@@ -42,7 +42,7 @@ function createItem(text: string,step:number) {
 }
 
 export default (code: string) => {
-  const res: Irespose[] = [];
+  const res: IvariableResult[] = [];
   parseCode(code, {
     visitor(text, s, astType) {
       if (["const", "var", "let"].includes(astType)) {

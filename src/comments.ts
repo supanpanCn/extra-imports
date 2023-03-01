@@ -5,14 +5,14 @@ interface line{
   e:number
 }
 
-type ResponseLine = Mixin<Omit<Response,'lines'|'type'>,{
+type ResponseLine = Mixin<Omit<IcommentsResult,'lines'|'type'>,{
   type?:'@';
   key?:string;
   value?:string;
   remark?:string
 }>;
 
-interface Response{
+export interface IcommentsResult{
     type:'single'|'multiple';
     text:string;
     start:number;
@@ -86,9 +86,9 @@ export default (
     start: string;
     reg: RegExp
   }
-): Response[]=> {
+): IcommentsResult[]=> {
   Array.isArray(m) && matchs.push(m);
-  const res:Response[] = []
+  const res:IcommentsResult[] = []
   for (let i = 0; i < code.length; i++) {
     const v = code[i];
     const { reg } = discern(v, i, code) || {};
@@ -105,7 +105,7 @@ export default (
           });
         }
         
-        const o:Response = {
+        const o:IcommentsResult = {
             type:lines.length === 1 ? 'single':'multiple',
             text:m2[0],
             start:i,

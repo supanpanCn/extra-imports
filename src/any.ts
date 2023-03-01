@@ -1,13 +1,13 @@
 import stripComments from 'displace-comments'
 
-interface Ires{
+export interface IanyResult{
   start:number;
   end:number;
   text:string;
   initialIndex?:number;
 }
 
-export default (code:string,start:string,end:string,initialIndex?:number):Ires|undefined=>{
+export default (code:string,start:string,end:string,initialIndex?:number):IanyResult|undefined=>{
   code = stripComments(code)
   if(!(start && end && code)) return
   let stack:string[] = []

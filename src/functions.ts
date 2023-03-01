@@ -1,5 +1,5 @@
 import { parseCode } from "su-helpers";
-interface Irespose {
+export interface IfuncResult {
   text: string;
   start: number;
   end: number;
@@ -18,7 +18,7 @@ function createItem(text: string,astType:string,step:number) {
       return null
     }
   }
-  const o: Irespose = {
+  const o: IfuncResult = {
     text:body,
     start: step,
     end: step + text.length,
@@ -28,7 +28,7 @@ function createItem(text: string,astType:string,step:number) {
 }
 
 export default (code: string) => {
-  const res: Irespose[] = [];
+  const res: IfuncResult[] = [];
   parseCode(code, {
     visitor(text, s, astType) {
       if (filters.includes(astType)) {
