@@ -41,6 +41,6 @@
 	"dependencies": {
 		"displace-comments": "^1.0.0",
 		"mlly": "^1.1.1",
-		"su-helpers": "0.0.12"
+		"su-helpers": "0.0.39"
 	}
 }

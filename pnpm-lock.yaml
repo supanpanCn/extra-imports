@@ -4,14 +4,14 @@ specifiers:
   '@types/node': ^18.11.18
   displace-comments: ^1.0.0
   mlly: ^1.1.1
-  su-helpers: 0.0.12
+  su-helpers: 0.0.39
   tsup: ^6.5.0
   typescript: ^4.9.5
 
 dependencies:
   displace-comments: 1.0.0
   mlly: 1.1.1
-  su-helpers: 0.0.12
+  su-helpers: 0.0.39
 
 devDependencies:
   '@types/node': 18.14.0
@@ -394,6 +394,12 @@ packages:
 
   /displace-comments/1.0.0:
     resolution: {integrity: sha512-fhF0oonVcfKQhGKHivLL4kJ3Cf+M8dUKGB1gH41+0ptsvSeCka2Bcb2YZyiU/pilbkgn+AO1QWr7PKrHTwBrvg==}
+    engines: {node: '>= 14'}
+    requiresBuild: true
+    dev: false
+
+  /displace-comments/1.0.4:
+    resolution: {integrity: sha512-1Ii33kV3pohv2RSsK2JcBqGT8ITmgemtzAWM4n+LUFJbI3l7OjvjIicgJGn8McE+9UhvOSQYoy5sTNL6fx1icQ==}
     engines: {node: '>= 14'}
     requiresBuild: true
     dev: false
@@ -935,11 +941,11 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /su-helpers/0.0.12:
-    resolution: {integrity: sha512-NBc1BXVKO9JZp/I4BbgYIH4lyBoGBF+QQcMv88aF6VnIXmQLaMtgvOWRky5MS4CxNMGUkNvFkGn007ObjbCIFQ==}
+  /su-helpers/0.0.39:
+    resolution: {integrity: sha512-ePmEgGBjfYCRHe/I6EbH2Z3QgGA5uaQbvMwnKNoVjDK22A2sQ6+vw7TVsRNCFgJb3ayoNmYPpyUoK34pBztu6Q==}
     requiresBuild: true
     dependencies:
-      displace-comments: 1.0.0
+      displace-comments: 1.0.4
       local-pkg: 0.4.3
       picocolors: 1.0.0
       recast: 0.22.0

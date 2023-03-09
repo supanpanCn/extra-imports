@@ -1,6 +1,6 @@
+import type { ESMExport } from "mlly";
 import { runArr, extractBlockCode, Mixin } from "su-helpers";
 import { findExports } from "mlly";
-import type { ESMExport } from "mlly";
 
 type Export = Mixin<
   ESMExport,
