@@ -1,4 +1,4 @@
-import stripComments from 'displace-comments'
+import { displaceComments } from 'displace-comments'
 
 export interface IanyResult{
   start:number;
@@ -8,7 +8,7 @@ export interface IanyResult{
 }
 
 export default (code:string,start:string,end:string,initialIndex?:number):IanyResult|undefined=>{
-  code = stripComments(code)
+  code = displaceComments(code)
   if(!(start && end && code)) return
   let stack:string[] = []
   let current = 0

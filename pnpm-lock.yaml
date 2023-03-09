@@ -2,14 +2,14 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/node': ^18.11.18
-  displace-comments: ^1.0.0
+  displace-comments: 1.0.4
   mlly: ^1.1.1
   su-helpers: 0.0.39
   tsup: ^6.5.0
   typescript: ^4.9.5
 
 dependencies:
-  displace-comments: 1.0.0
+  displace-comments: 1.0.4
   mlly: 1.1.1
   su-helpers: 0.0.39
 
@@ -391,12 +391,6 @@ packages:
     dependencies:
       path-type: 4.0.0
     dev: true
-
-  /displace-comments/1.0.0:
-    resolution: {integrity: sha512-fhF0oonVcfKQhGKHivLL4kJ3Cf+M8dUKGB1gH41+0ptsvSeCka2Bcb2YZyiU/pilbkgn+AO1QWr7PKrHTwBrvg==}
-    engines: {node: '>= 14'}
-    requiresBuild: true
-    dev: false
 
   /displace-comments/1.0.4:
     resolution: {integrity: sha512-1Ii33kV3pohv2RSsK2JcBqGT8ITmgemtzAWM4n+LUFJbI3l7OjvjIicgJGn8McE+9UhvOSQYoy5sTNL6fx1icQ==}
