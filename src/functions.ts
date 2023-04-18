@@ -1,5 +1,5 @@
 import { parseCode } from "su-helpers";
-interface Irespose {
+export interface IFunctionResponse {
   text: string;
   start: number;
   end: number;
@@ -19,7 +19,7 @@ function createItem(text: string,astType:string) {
       return null
     }
   }
-  const o: Irespose = {
+  const o: IFunctionResponse = {
     text:body,
     start: step,
     end: step + text.length,
@@ -29,7 +29,7 @@ function createItem(text: string,astType:string) {
 }
 
 export default (code: string) => {
-  const res: Irespose[] = [];
+  const res: IFunctionResponse[] = [];
   step = 0;
   parseCode(code, {
     visitor(text, s, astType) {

@@ -1,24 +1,31 @@
-import stripComments from 'displace-comments'
-
-interface Ires{
+export interface IAnyRes{
   start:number;
   end:number;
   text:string;
   initialIndex?:number;
 }
-
-export default (code:string,start:string,end:string,initialIndex?:number):Ires|undefined=>{
-  code = stripComments(code)
+export default (code:string,start:string,end:string,conf?:{
+  initialIndex?:number;
+  stripComment?:boolean;
+}):IAnyRes|undefined=>{
+  const { initialIndex,stripComment } = conf || {}
+  /**
+   * TODO
+   * strip comment
+   */
+  code = stripComment ? code : code
   if(!(start && end && code)) return
   let stack:string[] = []
   let current = 0
   let s = 0
   let e = Infinity
+  let isMatched = false
   let i = initialIndex || 0
   const len = code.length
   function _reset(){
     current = 0
     stack = []
+    isMatched = false
   }
 
   function _while(tar:string){
@@ -30,11 +37,16 @@ export default (code:string,start:string,end:string,initialIndex?:number):Ires|u
       }else{
         _reset()
       }
-      if(stack.join('') === tar) break
+      if(stack.join('') === tar) {
+        isMatched = true
+        break
+      }
     }
   }
 
   _while(start)
+
+  if(!isMatched) return undefined
   
   _reset()
   s = i - start.length + 1

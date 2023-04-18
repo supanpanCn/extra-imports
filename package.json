@@ -1,5 +1,5 @@
 {
-	"name": "extract-modules",
+	"name": "extract-modules-test",
 	"version": "0.0.3",
 	"description": "Parses the string to get its body and location information",
 	"packageManager": "pnpm@7.1.7",
@@ -8,7 +8,8 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"preinstall": "npx npm-only-allow@latest --PM pnpm --lang zh",
-		"dev": "tsup src/*.ts --format cjs,esm --dts --splitting --clean --watch src"
+		"build": "tsup --watch",
+		"dev": "node ./dist/index"
 	},
 	"files": [
 		"dist"
@@ -21,7 +22,9 @@
 		"parse-exports",
 		"parse-const",
 		"parse-function",
-		"parse-comments"
+		"parse-comments",
+		"parse-scripts",
+		"parse-modules"
 	],
 	"repository": {
 		"type": "git",
@@ -39,8 +42,9 @@
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"displace-comments": "^1.0.0",
+		"comment-parser": "^1.3.1",
+		"extract-comments": "^1.1.0",
 		"mlly": "^1.1.1",
-		"su-helpers": "^0.0.0"
+		"su-helpers": "^0.0.43"
 	}
 }

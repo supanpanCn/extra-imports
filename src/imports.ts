@@ -1,5 +1,5 @@
 import { doRegex,regex } from 'su-helpers'
-interface Irespose{
+export interface IImportResponse{
   text:string;
   start:number;
   end:number;
@@ -17,7 +17,7 @@ interface Irespose{
   }
 }
 
-function getAbsolutePos(this:Irespose,key:keyof Pick<Irespose,'from'|'import'> ){
+function getAbsolutePos(this:IImportResponse,key:keyof Pick<IImportResponse,'from'|'import'> ){
   const {
     text,
     start
@@ -32,10 +32,10 @@ function getAbsolutePos(this:Irespose,key:keyof Pick<Irespose,'from'|'import'> )
 
 export default (code:string)=>{
   const reg = regex.importRE
-  const res:Irespose[] = []
+  const res:IImportResponse[] = []
   doRegex(reg,code,(m)=>{
     const imp = m[4] ? m[4] : m[3]
-    const o:Irespose = {
+    const o:IImportResponse = {
       text:m[0],
       start:m.index,
       end:reg.lastIndex,

@@ -9,7 +9,7 @@ type Export = Mixin<
   }
 >;
 
-export interface Irespose {
+export interface IExportsResponse {
   text: string;
   start: number;
   end: number;
@@ -40,7 +40,7 @@ function extractFuncBody(initialIndex:number,endIndex:number,code:string){
   return ''
 }
 
-function execBrace(this: Irespose,code:string,initialIndex:number,getLen:(text:string)=>number){
+function execBrace(this: IExportsResponse,code:string,initialIndex:number,getLen:(text:string)=>number){
   const { text = "" } =
     extractBlockCode({
       code,
@@ -53,18 +53,18 @@ function execBrace(this: Irespose,code:string,initialIndex:number,getLen:(text:s
   execRewriteText.call(this,code)
 }
 
-function execRewriteText(this: Irespose,code:string){
+function execRewriteText(this: IExportsResponse,code:string){
   this.text = code.substring(this.start,this.end)
 }
 
-function execArrowFunction(this: Irespose,endIndex:number,code:string,getLen:(text:string)=>number){
+function execArrowFunction(this: IExportsResponse,endIndex:number,code:string,getLen:(text:string)=>number){
   const value = extractFuncBody(this.end,endIndex,code)
   this.value = value.trim()
   this.end += getLen(value)
   execRewriteText.call(this,code)
 }
 
-function execFunction(this: Irespose,endIndex:number,code:string,getLen:(text:string)=>number){
+function execFunction(this: IExportsResponse,endIndex:number,code:string,getLen:(text:string)=>number){
   const value = extractFuncBody(this.end,endIndex,code);
   this.value = value.trim()
   this.end += getLen(value)
@@ -72,7 +72,7 @@ function execFunction(this: Irespose,endIndex:number,code:string,getLen:(text:st
 }
 
 
-function complement(this: Irespose, code: string, exp: Export) {
+function complement(this: IExportsResponse, code: string, exp: Export) {
 
   const _execArrowFunction = execArrowFunction.bind(this)
   const _execFunction = execFunction.bind(this)
@@ -158,7 +158,7 @@ function complement(this: Irespose, code: string, exp: Export) {
 
 
 export default (code: string) => {
-  const exports: Irespose[] = [];
+  const exports: IExportsResponse[] = [];
   const parsedExports = findExports(code);
   runArr<Export>(parsedExports, (v) => {
     const o = {

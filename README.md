@@ -202,42 +202,51 @@
   ```
 * parseComments(code)  
   ```js
-  import {parseAny} from 'extract-modules'
+  import { parseComments } from 'extract-modules'
   parseComments(`
+  <div></div>
+
+  <script>
+  // aaaannnn
+
   /**
-   * @name {sp} 姓名
-   * @age {27} 年龄
+   * a:1
+  * b:{
+  *  c:1
+  * }
+  *
+  * 
   */
-  // 解析
+  </script>
+
+  <script lang='ts'>
+  /**
+   * a2:1
+   * b2:{
+   *  c2:1
+   * }
+   */
+  </script>
   `) 
   /** output
    [
     {
-      end:47,
-      start:41,
-      text:'// 解析\n',
+      end:37,
+      start:25,
+      text:'// aaaannnn\n',
       type:'single',
+      jsonText:{
+        value:"aaaannnn"
+      }
     },
     {
-      end:40,
-      lines:[{
-        end:21
-        key:'name'
-        remark:'姓名'
-        start:5
-        text:' * @name {sp} 姓名'
-        value:'sp'
-      },{
-        end:37
-        key:'age'
-        remark:'姓名'
-        start:22
-        text:' * @age {27} 年龄'
-        value:'27'
-      }],
-      start:1,
-      text:`\/\*\*\n * @name {sp} 姓名\n * @age {27} 年龄\n\*\/`,
-      type:'multiple',
+      end:79,
+      jsonText:{a: 1, b: {
+        c:1
+      }},
+      start:38
+      text:'/**\n * a:1\n * b:{\n *  c:1\n * }\n *\n * \n */'
+      type:'multiple'
     }
    ]
    */
