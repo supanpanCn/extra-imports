@@ -1,132 +1,113 @@
-import { runArr, doRegex, AnyObj } from "su-helpers";
+import { runArr, AnyObj, replaceAll } from "su-helpers";
 import parseJsCode, { IScriptResponse } from "./scripts";
-// @ts-ignore
-import parseComments from "extract-comments";
+import parseComments from "displace-comments";
+import parseNote from "./note";
 
 export interface ICommentsResponse {
-  type: "single" | "multiple";
+  type: "single" | "multiple" | "html" | "note";
   text: string;
   jsonText: AnyObj;
   start: number;
   end: number;
 }
 
-function getPosition(params: any) {
-  const { loc, initStart, type, text, value, code } = params;
-  const { start, end } = loc;
-  const { line } = start || {};
-  const { line: endLine, column } = end || {};
-  let chart = 0;
-  let dyLine = 1;
-
-  const o = {
-    start: 0,
-    end: 0,
-  };
-  let reg = /\n/g;
-  doRegex(reg, text, (m) => {
-    if (dyLine < line) {
-      dyLine++;
-      chart = m.index;
+function getType(type: ICommentsResponse["type"], text: string) {
+  if (type === "multiple") {
+    if (text.indexOf("@") > -1) {
+      return "note";
     }
+  }
+  return type;
+}
+
+function getHtml(text: string) {
+  text = text.replace("<!--", "");
+  text = text.replace("-->", "");
+  return text.trim();
+}
+
+function getSingle(text: string) {
+  text = text.replace("//", "");
+  return text.trim();
+}
+
+function getMultiple(text: string) {
+  const fragments = text.split("\n");
+  const json: AnyObj = {
+    unknows: [],
+  };
+  runArr<string>(fragments, (v, i) => {
+    const reg: any = /\*/g;
+    v = replaceAll(v, reg);
+    v = v.trim();
+    if (v.startsWith("/")) {
+      return "continue";
+    }
+    if (v.indexOf(":") > -1) {
+      let [key, value] = v.split(":");
+      key = key.trim();
+      const m = /[a-zA-Z]*/.exec(key);
+      if (m && m[0].length === key.length) {
+        const r = /('|")(.*?)\1/.exec(value);
+        json[key] = r ? r[2] : value;
+        return "continue";
+      }
+    }
+    json.unknows.push([v, i]);
   });
 
-  const index = text.indexOf("/", chart);
-  if (index > chart) {
-    chart = index;
-  }
-
-  o.start = chart + initStart;
-
-  if (type === "multiple") {
-    doRegex(
-      /\n/g,
-      text,
-      (m) => {
-        if (dyLine < endLine) {
-          dyLine++;
-          chart = m.index;
-        }
-      },
-      chart
-    );
-
-    const index = text.indexOf("*/", chart);
-
-    if (index > chart) {
-      chart = index;
-    }
-
-    o.end = initStart + chart + 2;
-  } else {
-    reg.lastIndex = chart;
-    const m = reg.exec(text);
-    o.end = o.start + value.length + 2;
-    if (m) {
-      const len = m.index - chart;
-      o.end = o.start + len + 1;
-    }
-  }
-
-  return o;
+  return json;
 }
 
-function getJson(text: string, type: string) {
+function getNote(text: string) {
+  const [{ jsonText }] = parseNote(text) || [
+    {
+      jsonText: {},
+    },
+  ];
+  return jsonText;
+}
+
+function getJson(text: string, type: ICommentsResponse["type"]) {
   if (type === "single") {
     return {
-      value: text,
+      value: getSingle(text),
     };
   }
-  try {
-    let json = {}
-    text = text.trim();
-    const arr = text.split("\n").map(v=>v.trim());
-    let jsonStr = "{\n";
-    while (arr.length) {
-      const v = arr.shift()!;
-      if(v.startsWith('@')){
-        const m = /@(\w+)[\s]+\{([^\}]*?)\}/g.exec(v)
-        if(m){
-          jsonStr += m[1]
-          jsonStr += ':'
-          jsonStr += `"${m[2]}"`
-          jsonStr += ','
-        }
-        continue
-      }
-      jsonStr += v
-      if(v.endsWith('{')) continue
-      jsonStr += ','
-    }
-    jsonStr += "}";
-    jsonStr = `json = ${jsonStr}`
-    
-    eval(jsonStr)
-    return json;
-  } catch (_) {
-    return {}
+
+  if (type === "html") {
+    return {
+      value: getHtml(text),
+    };
+  }
+
+  switch (type) {
+    case "multiple":
+      return getMultiple(text);
+    case "note":
+      return getNote(text);
   }
 }
-
 
 export default (code: string): ICommentsResponse[] => {
   const res: ICommentsResponse[] = [];
   const jsCode = parseJsCode(code);
   runArr<IScriptResponse>(jsCode, (v) => {
-    runArr<any>(parseComments(v.text), (comment) => {
-      const type = (comment.type =
-        comment.type === "LineComment" ? "single" : "multiple");
-      comment.initStart = v.start;
-      comment.text = v.text;
-      comment.code = code;
-      const pos = getPosition(comment);
-      res.push({
-        type,
-        text: code.substring(pos.start, pos.end),
-        jsonText: getJson(comment.value, type),
-        start: pos.start,
-        end: pos.end,
-      });
+    const { detail } = parseComments(v.text) || {
+      detail: [],
+    };
+    runArr<any>(detail, (comment) => {
+      const { type, start, end, text } = comment;
+      const o = {
+        type: getType(type, text),
+        text,
+        start: start + v.start,
+        end: end + v.end,
+        jsonText: {},
+      };
+
+      o.jsonText = getJson(text, o.type) as any;
+      res.push(o);
     });
   });
   return res;

@@ -169,7 +169,6 @@ function getJson(source: Source[]) {
 
     return json;
   } catch (_) {
-    debugger;
     return {};
   }
 }

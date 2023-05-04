@@ -7,25 +7,51 @@ export { IAnyRes, default as parseAny } from "./any.js";
 export { IScriptResponse, default as parseScriptCode } from "./scripts";
 export { INoteResponse, default as parseNote } from "./note";
 
-import parseNote from './note.js'
+// import parseComment from './comment.js'
+const commentCode = `<!-- 这是登录组件  -->
+<div>
+    登录
+</div>
+<!-- 这是登录组件  --><!-- 这是登录组件  -->
+<!-- 这是登录组件  -->
+</template>
 
-parseNote(`
+// 123
+//4
+
 /**
- * 扩展路由信息
- * @unrouter {boolean} true 启用unrouter
- * @auth {array} ['a','b','cd']  路由权限
- * @name {string} login 路由名称
- * @age 27
- * @age2 {
- *  aa:3
- * }
- * @love {array} ['唱歌']
- * @love2 {object} {
- *  a:1
- * }
- * @love3 {k:1} 
- * @love4 {object} {k:1} 
- * @other {object} { 
- * } meta
- */
-`)
+ * name:'a'
+ * age:b
+*/
+
+/*
+5
+*/
+
+/**
+     * 1
+    */
+
+
+
+// gelixian
+
+/**
+* 扩展路由信息
+* @unrouter {boolean} true 启用unrouter
+* @name {string} AutoRouter 设置路由名称
+* @alias {string} aliasName 设置路由别名
+* @redirect {string} /redirectUrl 设置路由重定向
+* @auth {array} ["a","b","c"] 设置路由权限
+* @customKey {object} {
+*  isLogin:true,
+*  a:1
+* } 其他信息
+*/
+
+/**
+* 123
+*/
+
+`
+// parseComment(commentCode)

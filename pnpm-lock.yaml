@@ -3,17 +3,17 @@ lockfileVersion: 5.4
 specifiers:
   '@types/node': ^18.11.18
   comment-parser: ^1.3.1
-  extract-comments: ^1.1.0
+  displace-comments: ^1.0.5
   mlly: ^1.1.1
-  su-helpers: ^0.0.43
+  su-helpers: ^0.0.47
   tsup: ^6.5.0
   typescript: ^4.9.5
 
 dependencies:
   comment-parser: 1.3.1
-  extract-comments: 1.1.0
+  displace-comments: 1.0.5
   mlly: 1.1.1
-  su-helpers: 0.0.43
+  su-helpers: 0.0.47
 
 devDependencies:
   '@types/node': 18.14.0
@@ -405,6 +405,12 @@ packages:
     requiresBuild: true
     dev: false
 
+  /displace-comments/1.0.5:
+    resolution: {integrity: sha512-4EbyL2Zg65jX+g8X5MmhreP7X7nqooZm9Z6OEwowlKF5nBGnnJwntXzipWgG7qmQmWjyIQG6S0S27ErLhmIlBw==}
+    engines: {node: '>= 14'}
+    requiresBuild: true
+    dev: false
+
   /es6-object-assign/1.1.0:
     resolution: {integrity: sha512-MEl9uirslVwqQU369iHNWZXsI8yaZYGg/D65aOgZkeyFJwHYSxilf7rQzXKI7DdDuBPrBXbfk3sl9hJhmd5AUw==}
     dev: false
@@ -439,13 +445,6 @@ packages:
       '@esbuild/win32-x64': 0.17.10
     dev: true
 
-  /esprima-extract-comments/1.1.0:
-    resolution: {integrity: sha512-sBQUnvJwpeE9QnPrxh7dpI/dp67erYG4WXEAreAMoelPRpMR7NWb4YtwRPn9b+H1uLQKl/qS8WYmyaljTpjIsw==}
-    engines: {node: '>=4'}
-    dependencies:
-      esprima: 4.0.1
-    dev: false
-
   /esprima/4.0.1:
     resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
     engines: {node: '>=4'}
@@ -466,14 +465,6 @@ packages:
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
     dev: true
-
-  /extract-comments/1.1.0:
-    resolution: {integrity: sha512-dzbZV2AdSSVW/4E7Ti5hZdHWbA+Z80RJsJhr5uiL10oyjl/gy7/o+HI1HwK4/WSZhlq4SNKU3oUzXlM13Qx02Q==}
-    engines: {node: '>=6'}
-    dependencies:
-      esprima-extract-comments: 1.1.0
-      parse-code-context: 1.0.0
-    dev: false
 
   /fast-glob/3.2.12:
     resolution: {integrity: sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==}
@@ -811,11 +802,6 @@ packages:
       mimic-fn: 2.1.0
     dev: true
 
-  /parse-code-context/1.0.0:
-    resolution: {integrity: sha512-OZQaqKaQnR21iqhlnPfVisFjBWjhnMl5J9MgbP8xC+EwoVqbXrq78lp+9Zb3ahmLzrIX5Us/qbvBnaS3hkH6OA==}
-    engines: {node: '>=6'}
-    dev: false
-
   /path-is-absolute/1.0.1:
     resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==}
     engines: {node: '>=0.10.0'}
@@ -962,8 +948,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /su-helpers/0.0.43:
-    resolution: {integrity: sha512-aVgVfAigv8Xc++MZIx0KZiOe1ZFRtUd0vfwTiurBUpBvJ12dDI+iySr48o4ifdtbGHpDA49Xi93YzDXH0rWb8g==}
+  /su-helpers/0.0.47:
+    resolution: {integrity: sha512-w0ZpBi5Z/k1kzqMImoREkYr6/ZDESWwrIXeEsk161teqPDP3F51QdHlGNAWLy1I3DubKMBLGPSSt//rd+jGkEg==}
     requiresBuild: true
     dependencies:
       displace-comments: 1.0.4
