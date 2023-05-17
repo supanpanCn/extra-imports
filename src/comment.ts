@@ -1,6 +1,6 @@
 import { runArr, AnyObj, replaceAll } from "su-helpers";
 import parseJsCode, { IScriptResponse } from "./scripts";
-import parseComments from "displace-comments";
+import { parse } from "displace-comments";
 import parseNote from "./note";
 
 export interface ICommentsResponse {
@@ -93,7 +93,7 @@ export default (code: string): ICommentsResponse[] => {
   const res: ICommentsResponse[] = [];
   const jsCode = parseJsCode(code);
   runArr<IScriptResponse>(jsCode, (v) => {
-    const { detail } = parseComments(v.text) || {
+    const detail = parse(v.text) || {
       detail: [],
     };
     runArr<any>(detail, (comment) => {
